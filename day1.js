@@ -52,6 +52,10 @@ function processInput(line) {
     } else if (line[i] === ')') {
       floor -= 1;
     }
+    if(floor === -1) {
+      console.log('Santa first enters the basement at position ' + (i + 1));
+      break;
+    }
   }
   console.log('Santa is on floor ' + floor);
 }
