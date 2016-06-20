@@ -1,5 +1,2 @@
-#Advent of Code Project [problem set](http://adventofcode.com/)
-Working through all Advent of Code problems in javascript
-
-
-
+#Advent of Code Project
+Working through all [Advent of Code problems](http://adventofcode.com/) in javascript and Node.js
