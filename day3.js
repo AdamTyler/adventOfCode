@@ -19,6 +19,26 @@ For example:
 starting/ending location.
 ^v^v^v^v^v delivers a bunch of presents to some very lucky children at only 2 houses.
 
+
+--- Part Two ---
+
+The next year, to speed up the process, Santa creates a robot version of himself, Robo-Santa,
+to deliver presents with him.
+
+Santa and Robo-Santa start at the same location (delivering two presents to the same starting
+house), then take turns moving based on instructions from the elf, who is eggnoggedly reading
+from the same script as the previous year.
+
+This year, how many houses receive at least one present?
+
+For example:
+
+^v delivers presents to 3 houses, because Santa goes north, and then Robo-Santa goes south.
+^>v< now delivers presents to 3 houses, and Santa and Robo-Santa end up back where they started.
+^v^v^v^v^v now delivers presents to 11 houses, with Santa going one direction and Robo-Santa going
+the other.
+
+
 ***************/
 
 var readFileSync = require('fs').readFileSync;
@@ -27,16 +47,17 @@ var directions = readFileSync('./inputs/day3.txt', 'utf8').trim().split('');
 
 // starting house gets a present;
 var houses = ['0,0'];
-var pos = {x:0, y:0};
-
+var pos = [{x:0, y:0},{x:0,y:0}];
+var santas = 2, j = 0;
 function countHouses(input) {
 
   for(var i = 0, max = input.length; i < max; i++) {
-    if (input[i] === '^') { pos.y += 1; }
-    else if (input[i] === 'v') { pos.y -= 1; }
-    else if (input[i] === '<') { pos.x -= 1; }
-    else if (input[i] === '>') { pos.x += 1; }
-    if(houses.indexOf(pos.x + ',' + pos.y) === -1) { houses.push(pos.x + ',' + pos.y); }
+    j = i % santas;
+    if (input[i] === '^') { pos[j].y += 1; }
+    else if (input[i] === 'v') { pos[j].y -= 1; }
+    else if (input[i] === '<') { pos[j].x -= 1; }
+    else if (input[i] === '>') { pos[j].x += 1; }
+    if(houses.indexOf(pos[j].x + ',' + pos[j].y) === -1) { houses.push(pos[j].x + ',' + pos[j].y); }
   }
 
   console.log(houses.length + ' houses received at least one present');
