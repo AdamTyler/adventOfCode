@@ -45,6 +45,12 @@ y: 456
 In little Bobby's kit's instructions booklet (provided as your puzzle input), what signal
 is ultimately provided to wire a?
 
+--- Part Two ---
+
+Now, take the signal you got on wire a, override wire b to that signal, and
+reset the other wires (including wire a). What new signal is ultimately
+provided to wire a?
+
 ******************/
 
 var fs = require('fs');
@@ -174,8 +180,25 @@ function findSignal() {
 
 lineReader.on('close', function() {
   // signals is filled
+  // save off fresh signals
+  var savedSignals = {};
+  for (var i in signals) {
+    if(signals.hasOwnProperty(i)) {
+      savedSignals[i] = signals[i];
+    }
+  }
+
   while(!done) {
     findSignal();
   }
-  console.log('signal A: ' + signals.a);
+  console.log('PART 1 signal A: ' + signals.a);
+  var savedA = signals.a;
+  signals = savedSignals;
+  signals.b = savedA;
+  done = false;
+  // run again with new b value
+  while(!done) {
+    findSignal();
+  }
+  console.log('PART 2 signal A: ' + signals.a);
 });
