@@ -187,7 +187,7 @@ lineReader.on('close', function() {
       savedSignals[i] = signals[i];
     }
   }
-
+  // run part 1
   while(!done) {
     findSignal();
   }
@@ -196,7 +196,7 @@ lineReader.on('close', function() {
   signals = savedSignals;
   signals.b = savedA;
   done = false;
-  // run again with new b value
+  // run part 2 with new b value
   while(!done) {
     findSignal();
   }
