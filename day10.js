@@ -18,10 +18,18 @@ For example:
 Starting with the digits in your puzzle input, apply this process 40 times.
 What is the length of the result?
 
+--- Part Two ---
+
+Neat, right? You might also enjoy hearing John Conway talking about this sequence
+(that's Conway of Conway's Game of Life fame).
+
+Now, starting again with the digits in your puzzle input, apply this process 50 times
+What is the length of the new result?
+
 ****************/
 
 var input = '3113322113';
-var runs = 40;
+var runs = 50;
 var count = 1;
 
 for (var i = 0; i < runs; i++) {
