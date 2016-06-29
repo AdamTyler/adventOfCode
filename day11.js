@@ -30,6 +30,11 @@ The next password after abcdefgh is abcdffaa.
 The next password after ghijklmn is ghjaabcc, because you eventually skip all the passwords that
 start with ghi..., since i is not allowed.
 Given Santa's current password (your puzzle input), what should his next password be?
+
+--- Part Two ---
+
+Santa's password expired again. What's the next one?
+
 ************/
 
 var input = 'hepxcrrq';
@@ -101,7 +106,11 @@ function runIt() {
   do {
     input = incrementPass(input, input.length - 1);
   } while(!validatePass(input));
-  console.log('Password is:',input);
+  console.log('Part1 Password is:',input);
+  do {
+    input = incrementPass(input, input.length - 1);
+  } while(!validatePass(input));
+  console.log('Part2 Password is:',input);
 }
 
 runIt();
