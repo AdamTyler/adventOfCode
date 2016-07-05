@@ -18,28 +18,57 @@ You will not encounter any strings containing numbers.
 
 What is the sum of all numbers in the document?
 
+
+--- Part Two ---
+
+Uh oh - the Accounting-Elves have realized that they double-counted everything red.
+
+Ignore any object (and all of its children) which has any property with the value "red". Do this
+only for objects ({...}), not arrays ([...]).
+
+[1,2,3] still has a sum of 6.
+[1,{"c":"red","b":2},3] now has a sum of 4, because the middle object is ignored.
+{"d":"red","e":[1,2,3,4],"f":5} now has a sum of 0, because the entire structure is ignored.
+[1,"red",5] has a sum of 6, because "red" in an array has no effect.
+
 *****/
 
 var fs = require('fs');
 var data = JSON.parse(fs.readFileSync('./inputs/day12.txt'));
 
-function checkForNum(json) {
+function checkForNum(json, checkRed) {
   var sum = 0;
-  for (var key in json) {
-    if (json.hasOwnProperty(key)) {
-      switch (typeof json[key]) {
-        case "object":
-          sum += checkForNum(json[key]);
-          break;
-        case "number":
-          sum += json[key];
-        default:
+  if(!checkRed || noRed(json)) {
+    for (var key in json) {
+      if (json.hasOwnProperty(key)) {
+        switch (typeof json[key]) {
+          case "object":
+            sum += checkForNum(json[key], checkRed);
+            break;
+          case "number":
+            sum += json[key];
+          default:
 
+        }
       }
     }
   }
   return sum;
 }
 
+function noRed(json) {
+  if (json.constructor !== Array) {
+    for (key in json) {
+      if (json[key] === 'red') {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 var p1 = checkForNum(data);
+var p2 = checkForNum(data, true);
 console.log('Sum of all numbers is:', p1);
+console.log('Sum without red is:', p2);
