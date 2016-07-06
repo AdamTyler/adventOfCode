@@ -25,6 +25,25 @@ win (if the race ended at 1000 seconds).
 Given the descriptions of each reindeer (in your puzzle input), after exactly 2503 seconds, what
 distance has the winning reindeer traveled?
 
+--- Part Two ---
+
+Seeing how reindeer move in bursts, Santa decides he's not pleased with the old scoring system.
+
+Instead, at the end of each second, he awards one point to the reindeer currently in the lead.
+(If there are multiple reindeer tied for the lead, they each get one point.) He keeps the
+traditional 2503 second time limit, of course, as doing otherwise would be entirely ridiculous.
+
+Given the example reindeer from above, after the first second, Dancer is in the lead and gets one
+point. He stays in the lead until several seconds into Comet's second burst: after the 140th
+second, Comet pulls into the lead and gets his first point. Of course, since Dancer had been in the
+lead for the 139 seconds before that, he has accumulated 139 points by the 140th second.
+
+After the 1000th second, Dancer has accumulated 689 points, while poor Comet, our old champion,
+only has 312. So, with the new scoring system, Dancer would win (if the race ended at 1000 seconds).
+
+Again given the descriptions of each reindeer (in your puzzle input), after exactly 2503 seconds,
+how many points does the winning reindeer have?
+
 ***************/
 
 var fs = require('fs');
@@ -48,6 +67,7 @@ lineReader.on('line', function(line) {
   speeds[name]['time'] = parseInt(time);
   speeds[name]['rest'] = parseInt(rest);
   speeds[name]['dist'] = 0;
+  speeds[name]['points'] = 0;
 });
 
 function getMaxDist(obj) {
@@ -62,22 +82,35 @@ function getMaxDist(obj) {
   return [winning, maxDist];
 }
 
-lineReader.on('close', function() {
-  for (var name in speeds) {
-    var intervalTime = speeds[name]['time'] + speeds[name]['rest'];
-    var wholeIntervals = Math.floor(raceTime / intervalTime);
-    var timeRemain = raceTime % intervalTime;
-
-    speeds[name]['dist'] += wholeIntervals * (speeds[name]['speed'] * speeds[name]['time']);
-    // if they have more time remaining than they race for, they will be resting at the end
-    if (timeRemain > speeds[name]['time']) {
-      speeds[name]['dist'] += speeds[name]['speed'] * speeds[name]['time'];
-    } else {
-      // they are racing at the end
-      speeds[name]['dist'] += speeds[name]['speed'] * timeRemain;
+function getMaxPoints(obj) {
+  var maxPoints = 0;
+  var winning = '';
+  for (var key in obj) {
+    if (obj[key]['points'] > maxPoints) {
+      maxPoints = obj[key]['points'];
+      winning = key;
     }
   }
-  var results = getMaxDist(speeds);
-  console.log('Winning Reindeer is ' + results[0] + ' with distance of ' + results[1] + 'km');
+  return [winning, maxPoints];
+}
+
+lineReader.on('close', function() {
+  for (var i = 1; i < raceTime; i++) {
+    for (var name in speeds) {
+      var intervalTime = speeds[name]['time'] + speeds[name]['rest'];
+      var wholeIntervals = Math.floor(i / intervalTime);
+      var timeRemain = i - (intervalTime * wholeIntervals);
+
+      speeds[name]['dist'] = wholeIntervals * (speeds[name]['speed'] * speeds[name]['time']);
+      if (timeRemain > speeds[name]['time']) {
+        speeds[name]['dist'] += speeds[name]['speed'] * speeds[name]['time'];
+      } else {
+        speeds[name]['dist'] += speeds[name]['speed'] * timeRemain;
+      }
+    }
+    speeds[getMaxDist(speeds)[0]]['points'] += 1;
+  }
+  var res = getMaxPoints(speeds);
+  console.log('Winning Reindeer is ' + res[0] + ' with ' + res[1] + ' points ');
 
 })
