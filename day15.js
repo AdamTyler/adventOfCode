@@ -38,6 +38,20 @@ score to multiply to zero.
 Given the ingredients in your kitchen and their properties, what is the total score of the
 highest-scoring cookie you can make?
 
+--- Part Two ---
+
+Your cookie recipe becomes wildly popular! Someone asks if you can make another recipe that has
+exactly 500 calories per cookie (so they can use it as a meal replacement). Keep the rest of your
+award-winning process the same (100 teaspoons, same ingredients, same scoring system).
+
+For example, given the ingredients above, if you had instead selected 40 teaspoons of butterscotch
+and 60 teaspoons of cinnamon (which still adds to 100), the total calorie count would be
+40*8 + 60*3 = 500. The total score would go down, though: only 57600000, the best you can do in
+such trying circumstances.
+
+Given the ingredients in your kitchen and their properties, what is the total score of the
+highest-scoring cookie you can make with a calorie total of 500?
+
 *************/
 
 var regex = /(\w+): capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (-?\d+)/;
@@ -62,6 +76,7 @@ var capacity = 0;
 var durability = 0;
 var flavor = 0;
 var texture = 0;
+var calories = 0;
 var recipe = [];
 var score = 0;
 var maxScore = 0;
@@ -78,7 +93,10 @@ for (t1 = 1; t1 <= 100; t1++) {
                    t3 * ingredients[2].flavor + t4 * ingredients[3].flavor;
       texture =    t1 * ingredients[0].texture + t2 * ingredients[1].texture +
                    t3 * ingredients[2].texture + t4 * ingredients[3].texture;
-      if(capacity <= 0 || durability <= 0 || flavor <= 0 || texture <= 0) {
+      calories =    t1 * ingredients[0].calories + t2 * ingredients[1].calories +
+                   t3 * ingredients[2].calories + t4 * ingredients[3].calories;
+      if (calories !== 500) { continue; }
+      if (capacity <= 0 || durability <= 0 || flavor <= 0 || texture <= 0) {
         score = 0;
       } else {
         score = capacity * durability * flavor * texture;
